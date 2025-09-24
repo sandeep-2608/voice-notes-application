@@ -1,11 +1,14 @@
 import axios from "axios";
 
-// Simple API URL detection
-const API_BASE_URL = window.location.hostname.includes("vercel.app")
-  ? "/api"
-  : "http://localhost:5000/api";
+// API URL points
+const API_BASE_URL =
+  process.env.NODE_ENV === "production"
+    ? process.env.REACT_APP_API_URL ||
+      "https://voice-notes-api-5cf9.onrender.com/api"
+    : process.env.REACT_APP_API_URL || "http://localhost:5000/api";
 
-console.log("API Base URL:", API_BASE_URL);
+console.log("🔗 API Base URL:", API_BASE_URL);
+console.log("🌍 Environment:", process.env.NODE_ENV);
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -14,6 +17,37 @@ const api = axios.create({
   },
   timeout: 30000, // 30 seconds timeout for Vercel
 });
+
+// Request interceptor
+api.interceptors.request.use(
+  (config) => {
+    console.log(
+      `📡 Making ${config.method?.toUpperCase()} request to:`,
+      config.url
+    );
+    return config;
+  },
+  (error) => {
+    console.error("❌ Request error:", error);
+    return Promise.reject(error);
+  }
+);
+
+// Response interceptor
+api.interceptors.response.use(
+  (response) => {
+    console.log("✅ API Response received:", response.status);
+    return response;
+  },
+  (error) => {
+    console.error("❌ API Error:", {
+      status: error.response?.status,
+      message: error.response?.data?.error || error.message,
+      url: error.config?.url,
+    });
+    return Promise.reject(error);
+  }
+);
 
 export const getAllNotes = async () => {
   try {
