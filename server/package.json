@@ -1,13 +1,13 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "",
+  "description": "Backend for Voice Notes AI application",
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "vercel-build": "echo 'Backend build complete"
   },
   "keywords": [],
   "author": "",
