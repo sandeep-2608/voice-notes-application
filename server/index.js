@@ -15,8 +15,16 @@ const app = express();
 // Connect to Database
 connectDB();
 
-// security middleware
-app.use(cors());
+// CORS configuration
+const corsOptions = {
+  origin:
+    process.env.NODE_ENV === "production"
+      ? ["https://*.vercel.app"]
+      : ["http://localhost:3000", "http://127.0.0.1:3000"],
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
+app.use(cors(cors));
 
 // Body Parsing middleware
 app.use(express.json());
@@ -36,15 +44,15 @@ app.get("/api/health", (req, res) => {
   res.json({ status: "OK", message: "Voice Notes API is running" });
 });
 
-// Serve static files from React build (for production)
-if (process.env.NODE_ENV === "production") {
-  const frontendPath = path.join(__dirname, "..", "frontend", "build");
-  app.use(express.static(frontendPath));
+// // Serve static files from React build (for production)
+// if (process.env.NODE_ENV === "production") {
+//   const frontendPath = path.join(__dirname, "..", "frontend", "build");
+//   app.use(express.static(frontendPath));
 
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(frontendPath, "index.html"));
-  });
-}
+//   app.get("*", (req, res) => {
+//     res.sendFile(path.join(frontendPath, "index.html"));
+//   });
+// }
 
 // Global error handling middleware
 app.use((error, req, res, next) => {
@@ -70,10 +78,8 @@ app.use((req, res) => {
 
 // Start server
 const PORT = process.env.PORT || 5000;
-// For Vercel, export the app
-if (process.env.NODE_ENV === "production") {
-  module.exports = app;
-} else {
+// For development
+if (process.env.NODE_ENV !== "production") {
   app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
   });
