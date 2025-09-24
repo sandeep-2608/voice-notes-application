@@ -3,11 +3,9 @@ import express from "express";
 import { connectDB } from "./config/db.js";
 import cors from "cors";
 import notesRoutes from "./routes/voiceNoteRoute.js";
-import { fileURLToPath } from "url";
-import path from "path";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
 
 // Initialize express app
 const app = express();
@@ -20,7 +18,7 @@ const corsOptions = {
   origin:
     process.env.NODE_ENV === "production"
       ? ["https://*.vercel.app"]
-      : ["http://localhost:3000", "http://127.0.0.1:3000"],
+      : ["http://localhost:3000"],
   credentials: true,
   optionsSuccessStatus: 200,
 };
@@ -44,16 +42,6 @@ app.get("/api/health", (req, res) => {
   res.json({ status: "OK", message: "Voice Notes API is running" });
 });
 
-// // Serve static files from React build (for production)
-// if (process.env.NODE_ENV === "production") {
-//   const frontendPath = path.join(__dirname, "..", "frontend", "build");
-//   app.use(express.static(frontendPath));
-
-//   app.get("*", (req, res) => {
-//     res.sendFile(path.join(frontendPath, "index.html"));
-//   });
-// }
-
 // Global error handling middleware
 app.use((error, req, res, next) => {
   console.error("Unhandled error:", error);
@@ -71,11 +59,6 @@ app.use((error, req, res, next) => {
   res.status(500).json({ error: "Internal server error" });
 });
 
-// Handle 404
-app.use((req, res) => {
-  res.status(404).json({ error: "Route not found" });
-});
-
 // Start server
 const PORT = process.env.PORT || 5000;
 // For development
@@ -84,3 +67,6 @@ if (process.env.NODE_ENV !== "production") {
     console.log(`🚀 Server running on port ${PORT}`);
   });
 }
+
+// For production
+export default app;
