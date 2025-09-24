@@ -14,7 +14,7 @@ connectDB();
 const corsOptions = {
   origin: [
     "http://localhost:3000",
-    "https://your-app.vercel.app", //  update this after Vercel deployment
+    "voice-notes-application.vercel.app",
     "https://*.vercel.app",
   ],
   credentials: true,
