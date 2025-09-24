@@ -14,15 +14,7 @@ const app = express();
 connectDB();
 
 // CORS configuration
-const corsOptions = {
-  origin:
-    process.env.NODE_ENV === "production"
-      ? ["https://*.vercel.app"]
-      : ["http://localhost:3000"],
-  credentials: true,
-  optionsSuccessStatus: 200,
-};
-app.use(cors(cors));
+app.use(cors());
 
 // Body Parsing middleware
 app.use(express.json());
@@ -52,11 +44,12 @@ app.use((error, req, res, next) => {
       .json({ error: "Validation failed", details: error.message });
   }
 
-  if (error.name === "CastError") {
-    return res.status(400).json({ error: "Invalid ID format" });
-  }
-
   res.status(500).json({ error: "Internal server error" });
+});
+
+// Catch all API routes
+app.use("/api/*", (req, res) => {
+  res.status(404).json({ error: "API route not found" });
 });
 
 // Start server

@@ -1,9 +1,11 @@
 import axios from "axios";
 
-const API_BASE_URL =
-  process.env.NODE_ENV === "production"
-    ? "/api" // Same domain in production (Vercel)
-    : process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+// Simple API URL detection
+const API_BASE_URL = window.location.hostname.includes("vercel.app")
+  ? "/api"
+  : "http://localhost:5000/api";
+
+console.log("API Base URL:", API_BASE_URL);
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -12,31 +14,6 @@ const api = axios.create({
   },
   timeout: 30000, // 30 seconds timeout for Vercel
 });
-
-// Add request interceptor for debugging
-api.interceptors.request.use(
-  (config) => {
-    console.log(
-      `Making ${config.method.toUpperCase()} request to:`,
-      config.url
-    );
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
-// Add response interceptor for better error handling
-api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    console.error("API Error:", error.response?.data || error.message);
-    return Promise.reject(error);
-  }
-);
 
 export const getAllNotes = async () => {
   try {

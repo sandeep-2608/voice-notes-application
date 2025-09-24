@@ -1,13 +1,11 @@
 {
-  "name": "voice-notes-application",
+  "name": "voice-notes-mern",
   "version": "1.0.0",
   "private": true,
+  "scripts": {
+    "build": "cd client && npm install && npm run build"
+  },
   "engines": {
     "node": "22.x"
-  },
-  "scripts": {
-    "build": "cd client && npm ci && npm run build",
-    "install-server": "cd server && npm ci",
-    "install-client": "cd client && npm ci"
   }
 }
