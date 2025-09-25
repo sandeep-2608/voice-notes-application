@@ -14,8 +14,9 @@ connectDB();
 const corsOptions = {
   origin: [
     "http://localhost:3000",
-    "voice-notes-application.vercel.app",
+    "https://voice-notes-application.vercel.app",
     "https://*.vercel.app",
+    "https://vercel.app",
   ],
   credentials: true,
   optionsSuccessStatus: 200,
@@ -58,6 +59,15 @@ app.get("/", (req, res) => {
   });
 });
 
+// Test route to check CORS
+app.get("/api/test-cors", (req, res) => {
+  res.json({
+    message: "CORS test successful",
+    origin: req.headers.origin,
+    timestamp: new Date().toISOString(),
+  });
+});
+
 // Global error handling middleware
 app.use((error, req, res, next) => {
   console.error("Unhandled error:", error);
@@ -71,14 +81,20 @@ app.use((error, req, res, next) => {
   res.status(500).json({ error: "Internal server error" });
 });
 
-// Catch all API routes
-app.use((req, res) => {
-  res.status(404).json({ error: "API route not found" });
-});
-
 // Start server
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 10000;
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Server running on port ${PORT}`);
+});
+
+// Handle process termination gracefully
+process.on("SIGTERM", () => {
+  console.log("SIGTERM received, shutting down gracefully");
+  process.exit(0);
+});
+
+process.on("SIGINT", () => {
+  console.log("SIGINT received, shutting down gracefully");
+  process.exit(0);
 });

@@ -15,6 +15,8 @@ const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  timeout: 120000, // 2 minutes for Render free tier
+  withCredentials: false, // Set to false for CORS
 });
 
 // Request interceptor
