@@ -83,8 +83,9 @@ app.use((error, req, res, next) => {
 
 // Start server
 const PORT = process.env.PORT || 10000;
+const HOST = "0.0.0.0";
 
-app.listen(PORT, "0.0.0.0", () => {
+app.listen(PORT, HOST, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
 
